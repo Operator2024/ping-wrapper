@@ -32,7 +32,7 @@ jobs:
       run: sudo sysctl net.ipv4.ping_group_range
 
     - name: Ping availability
-      run: sudo ./main -IP 1.1.1.1 -L 100 -I 2 -C 10 -O Availability
+      run: sudo ./main -IP localhost -L 100 -I 2 -C 10 -O Availability
 
     - name: Ping RAW
-      run: sudo ./main -IP 1.1.1.1 -L 100 -I 2 -C 10 -R true
+      run: sudo ./main -IP localhost -L 100 -I 2 -C 10 -R true
