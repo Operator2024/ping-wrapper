@@ -1,0 +1,35 @@
+name: Go
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: [ '1.16.5', '1.18' ]
+
+    name: Go ${{ matrix.go }} build and run
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup go ${{ matrix.go }}
+      uses: actions/setup-go@v3
+      with:
+        go-version: ${{ matrix.go }}
+
+    - name: Go mod install
+      run: go mod tidy
+
+    - name: Build
+      run: go build -v main.go
+
+    - name: Checking help info
+      run: ./main -h
+
+    - name: Ping availability
+      run: ./main -IP 1.1.1.1 -L 100 -I 2 -C 10 -O Availability
+
+    - name: Ping RAW
+      run: ./main -IP 1.1.1.1 -L 100 -I 2 -C 10 -R true

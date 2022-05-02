@@ -12,7 +12,12 @@ import (
 	"time"
 )
 
-const version string = "0.2.0"
+var (
+	version        string
+	date           string
+	buildDate      time.Time
+	goBuildVersion string
+)
 
 type Flags struct {
 	name  string
@@ -54,6 +59,8 @@ var (
 	Raw  = myFlag.String(RawF.name, RawF.value, RawF.usage)
 
 	OutArgs = []string{"Availability", "Min", "Max", "Std", "Loss", "Sent", "Recv"}
+
+	UsageInfo = "Usage of ping_wrapper (Version: %s, build info: %s [%s]), [<input args>] [<output args>]\n"
 )
 
 // Overriding default help
@@ -83,11 +90,15 @@ func PrintDefaults() {
 }
 
 var Usage = func() {
-	fmt.Printf("Usage of ping_wrapper (ver %s) [<input args>] [<output args>]\n", version)
+	fmt.Printf(UsageInfo, version, goBuildVersion, buildDate.Format("2006-01-02 03:04:05PM MST"))
 	PrintDefaults()
 }
 
 func main() {
+	if version != "" {
+		goBuildVersion = runtime.Version()
+		buildDate, _ = time.Parse("2006-01-02 03:04:05PM MST", date)
+	}
 
 	var _flag = myFlagSet{myFlag}
 	_flag.Usage = Usage
@@ -98,8 +109,7 @@ func main() {
 	}
 
 	if len(os.Args) <= 1 {
-		fmt.Printf("Usage of ping_wrapper (ver %s) [<input args>] [<output args>]\n", version)
-		PrintDefaults()
+		Usage()
 	} else if *Output != "" && *Raw != "false" {
 		fmt.Println("Output parameters can't have RAW and processed format at the same time")
 	} else {

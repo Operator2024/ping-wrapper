@@ -1,4 +1,4 @@
-module ping_wrapper
+module github.com/Operator2024/ping-wrapper
 
 go 1.16
 
